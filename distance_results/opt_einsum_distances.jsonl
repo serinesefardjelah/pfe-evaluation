@@ -1,0 +1,14 @@
+{"Repo Name": "opt_einsum", "Function Name": "can_blas", "Mutant Index": 1, "distance": 0.7236655034251002}
+{"Repo Name": "opt_einsum", "Function Name": "can_blas", "Mutant Index": 2, "distance": 0.7009176683469045}
+{"Repo Name": "opt_einsum", "Function Name": "can_blas", "Mutant Index": 3, "distance": 0.6816595579682048}
+{"Repo Name": "opt_einsum", "Function Name": "_choose_memory_arg", "Mutant Index": 1, "distance": 0.9998707509370557}
+{"Repo Name": "opt_einsum", "Function Name": "_choose_memory_arg", "Mutant Index": 2, "distance": 0.9998707509370557}
+{"Repo Name": "opt_einsum", "Function Name": "_choose_memory_arg", "Mutant Index": 3, "distance": 0.9998707509370557}
+{"Repo Name": "opt_einsum", "Function Name": "_filter_einsum_defaults", "Mutant Index": 1, "distance": 0.8888458058679074}
+{"Repo Name": "opt_einsum", "Function Name": "_filter_einsum_defaults", "Mutant Index": 2, "distance": 0.8888458058679074}
+{"Repo Name": "opt_einsum", "Function Name": "_filter_einsum_defaults", "Mutant Index": 3, "distance": 0.8888458058679074}
+{"Repo Name": "opt_einsum", "Function Name": "contract_path", "Mutant Index": 1, "distance": 0.009047434406100563}
+{"Repo Name": "opt_einsum", "Function Name": "contract_path", "Mutant Index": 2, "distance": 0.009176683469044877}
+{"Repo Name": "opt_einsum", "Function Name": "contract_path", "Mutant Index": 3, "distance": 0.0}
+{"Repo Name": "opt_einsum", "Function Name": "_einsum", "Mutant Index": 1, "distance": 0.036577484813235084}
+{"Repo Name": "opt_einsum", "Function Name": "_einsum", "Mutant Index": 2, "distance": 0.036577484813235084}
