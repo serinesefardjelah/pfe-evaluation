@@ -46,7 +46,7 @@ repos = [
         "https://github.com/graphql-python/graphql-core",
         "https://github.com/mahmoud/boltons",
         "https://github.com/more-itertools/more-itertools",
-       # "https://github.com/mozilla/bleach",
+       "https://github.com/mozilla/bleach",
 
         #No test directory found 
     ]
@@ -102,6 +102,8 @@ def report_distance_from_csv(file_path):
     df['distance'] = 1 - df['Failed Count'] / df['total_tests']
     df['distance'] = df['distance'].fillna(0)
 
+    
+    
     # Optional: Save individual distances to JSONL per repo
     os.makedirs("distance_results", exist_ok=True)
     for repo_name, group in df.groupby("Repo Name"):
@@ -114,57 +116,36 @@ def report_distance_from_csv(file_path):
     return mean_distances
 
 
-def report_distance(files_list):
-    """Calculate the distance for mutants across multiple files."""
-    mean_distance = []
-    for file in files_list:
-        overall_distances = []
-
-        # Read mutant data from the file
-        mutants = read_jsonl_lines(file)
-
-        for mutant in mutants:
-            # Calculate distance for each mutant
-            total_tests = mutant['Passed Count'] + mutant['Failed Count']
-            if total_tests == 0:
-                distance = 0
-            else:
-                distance = 1 - mutant['Failed Count'] / total_tests
-
-            overall_distances.append({
-                "Repo Name": mutant['Repo Name'],
-                "Function Name": mutant['Function Name'],
-                "Mutant Index": mutant['Mutant Index'],
-                "distance": distance
-            })
-
-        # Write the calculated distances to JSONL
-        write_jsonl(f"distance_results/{file.split('/')[-2]}.jsonl", overall_distances)
-
-        df_overall = pd.DataFrame(overall_distances)
-        mean_distance.append({"file": file.split('/')[-2], "mean_distance : ": df_overall['distance'].mean()})
-
-    return mean_distance
-
 
 def process_repositories(repos):
-    """Loop through the list of repositories and process their mutation results."""
+    """Update all_repos_stats.csv with Mean Distance for each repository."""
+    stats_df = pd.read_csv("all_repos_stats.csv")
+
+    all_mean_distances = []
     for repo_url in repos:
-        # Extract the repo name from the URL (e.g., "charset_normalizer" from "https://github.com/Ousret/charset_normalizer")
         repo_name = repo_url.split('/')[-1]
+        mutation_results_path = f"./repo_stats/{repo_name}_mutation_results.csv"
 
-        # Set the path to the mutation results CSV file
-        mutation_results_path = f"./repo_stats/{repo_name}mutation_results.csv"
+        try:
+            
+            mean_df = report_distance_from_csv(mutation_results_path)
 
-        # Compute the distances from CSV for the current repository
-        mean_df = report_distance_from_csv(mutation_results_path)
-        print(f"Mean Distances for {repo_name}:")
-        print(mean_df)
+            # There should only be one row per repo in mean_df
+            all_mean_distances.append(mean_df.iloc[0])
+        except FileNotFoundError:
+            print(f"Mutation results file not found for {repo_name}, skipping.")
+        except Exception as e:
+            print(f"Error processing {repo_name}: {e}")
 
-        # Optional: Merge with `all_repos_stats.csv`
-        stats_df = pd.read_csv("all_repos_stats.csv")
-        merged = stats_df.merge(mean_df, on="Repo Name", how="left")
-        merged.to_csv(f"enhanced_repo_stats_{repo_name}.csv", index=False)
+    # Combine all mean distances into one DataFrame
+    mean_distances_df = pd.DataFrame(all_mean_distances)
+
+    # Merge with the original stats DataFrame
+    merged_df = stats_df.merge(mean_distances_df, on="Repo Name", how="left")
+
+    # Save the updated file once
+    merged_df.to_csv("enhanced_repo_stats_all.csv", index=False)
+    print("Saved enhanced_repo_stats_all.csv with mean distances.")
 
 
 if __name__ == "__main__":

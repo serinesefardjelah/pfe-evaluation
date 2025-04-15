@@ -15,7 +15,7 @@
 {"Repo Name": "idna", "Function Name": "alabel", "Mutant Index": 3, "distance": 1.0}
 {"Repo Name": "idna", "Function Name": "intranges_from_list", "Mutant Index": 1, "distance": 1.0}
 {"Repo Name": "idna", "Function Name": "intranges_from_list", "Mutant Index": 2, "distance": 1.0}
-{"Repo Name": "idna", "Function Name": "intranges_from_list", "Mutant Index": 3, "distance": 0.0}
+{"Repo Name": "idna", "Function Name": "intranges_from_list", "Mutant Index": 3, "distance": 1.0}
 {"Repo Name": "idna", "Function Name": "intranges_contain", "Mutant Index": 1, "distance": 1.0}
 {"Repo Name": "idna", "Function Name": "intranges_contain", "Mutant Index": 2, "distance": 1.0}
 {"Repo Name": "idna", "Function Name": "intranges_contain", "Mutant Index": 3, "distance": 1.0}

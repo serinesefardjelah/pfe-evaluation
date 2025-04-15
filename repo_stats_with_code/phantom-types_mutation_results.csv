@@ -1,0 +1,734 @@
+Repo Name,Function Name,original_code,Description,Mutant Index,Mutant Code,Test Case,Test Result,Passed Count,Failed Count,Failed Tests,Failure Reasons
+phantom-types,compose2,"def compose2(a: Callable[[AA], AR], b: Callable[[BA], AA]) -> Callable[[BA], AR]:
+    """"""
+    Returns a function composed from the two given functions ``a`` and ``b`` such that
+    calling ``compose2(a, b)(x)`` is equivalent to calling ``a(b(x))``.
+
+    >>> compose2("""".join, reversed)(""!olleH"")
+    'Hello!'
+    """"""
+    a_name = _name(a)
+    b_name = _name(b)
+
+    def c(arg: BA) -> AR:
+        return a(b(arg))
+    c.__name__ = f'{a_name}∘{b_name}'
+    c.__doc__ = f'Function composed as {a_name}({b_name}(_)).'
+    return c",The `compose2` function takes two functions `a` and `b` as input and returns a new function that is a composition of the two input functions. This means that calling the composed function with an argument `x` is equivalent to first applying function `b` to `x` and then applying function `a` to the result. The goal of the `compose2` function is to create a new function that combines the functionality of the two input functions by applying them in a specific order.,1,"def compose2(a, b):
+    def composed_function(x):
+        return a(b(x))
+    
+    return composed_function",N/A,Execution error: '>' not supported between instances of 'str' and 'int',0,0,[],[]
+phantom-types,compose2,"def compose2(a: Callable[[AA], AR], b: Callable[[BA], AA]) -> Callable[[BA], AR]:
+    """"""
+    Returns a function composed from the two given functions ``a`` and ``b`` such that
+    calling ``compose2(a, b)(x)`` is equivalent to calling ``a(b(x))``.
+
+    >>> compose2("""".join, reversed)(""!olleH"")
+    'Hello!'
+    """"""
+    a_name = _name(a)
+    b_name = _name(b)
+
+    def c(arg: BA) -> AR:
+        return a(b(arg))
+    c.__name__ = f'{a_name}∘{b_name}'
+    c.__doc__ = f'Function composed as {a_name}({b_name}(_)).'
+    return c",The `compose2` function takes two functions `a` and `b` as input and returns a new function that is a composition of the two input functions. This means that calling the composed function with an argument `x` is equivalent to first applying function `b` to `x` and then applying function `a` to the result. The goal of the `compose2` function is to create a new function that combines the functionality of the two input functions by applying them in a specific order.,2,"def compose2(a, b):
+    def composed_function(x):
+        return a(b(x))
+    
+    return composed_function",N/A,Execution error: '>' not supported between instances of 'str' and 'int',0,0,[],[]
+phantom-types,compose2,"def compose2(a: Callable[[AA], AR], b: Callable[[BA], AA]) -> Callable[[BA], AR]:
+    """"""
+    Returns a function composed from the two given functions ``a`` and ``b`` such that
+    calling ``compose2(a, b)(x)`` is equivalent to calling ``a(b(x))``.
+
+    >>> compose2("""".join, reversed)(""!olleH"")
+    'Hello!'
+    """"""
+    a_name = _name(a)
+    b_name = _name(b)
+
+    def c(arg: BA) -> AR:
+        return a(b(arg))
+    c.__name__ = f'{a_name}∘{b_name}'
+    c.__doc__ = f'Function composed as {a_name}({b_name}(_)).'
+    return c",The `compose2` function takes two functions `a` and `b` as input and returns a new function that is a composition of the two input functions. This means that calling the composed function with an argument `x` is equivalent to first applying function `b` to `x` and then applying function `a` to the result. The goal of the `compose2` function is to create a new function that combines the functionality of the two input functions by applying them in a specific order.,3,"def compose2(a, b):
+    def composed_function(x):
+        return a(b(x))
+    
+    return composed_function",N/A,Execution error: '>' not supported between instances of 'str' and 'int',0,0,[],[]
+phantom-types,_get_scalar_int_bounds,"def _get_scalar_int_bounds(type_: type[Interval], exclude_min: bool=False, exclude_max: bool=False) -> tuple[int | None, int | None]:
+    low = type_.__low__ if type_.__low__ != neg_inf else None
+    high = type_.__high__ if type_.__high__ != inf else None
+    if low is not None:
+        try:
+            scalar_low = int(low)
+        except TypeError as exception:
+            raise _NonScalarBounds from exception
+        if exclude_min:
+            scalar_low += 1
+    else:
+        scalar_low = None
+    if high is not None:
+        try:
+            scalar_high = int(high)
+        except TypeError as exception:
+            raise _NonScalarBounds from exception
+        if exclude_max:
+            scalar_high -= 1
+    else:
+        scalar_high = None
+    return (scalar_low, scalar_high)","The goal of the function `_get_scalar_int_bounds` is to extract integer bounds from a given interval type while optionally excluding the minimum and maximum values. 
+It returns a tuple containing the scalar integer lower and upper bounds based on the input type, excluding the specified values if required. This function handles cases where the lower or upper bounds are infinite or non-numeric.
+
+If this function is part of a class, it likely interacts with the class by utilizing the attributes `type_.__low__` and `type_.__high__` to extract the bounds from a specific interval type. The function may also raise a `_NonScalarBounds` exception if the bounds are not scalar values.",1,"def _get_scalar_int_bounds(type_, exclude_min=False, exclude_max=False):
+    lower_bound = type_.__low__
+    upper_bound = type_.__high__
+    
+    if exclude_min:
+        if lower_bound == float('-inf'):
+            lower_bound = float('-inf') + 1
+        else:
+            lower_bound += 1
+            
+    if exclude_max:
+        if upper_bound == float('inf'):
+            upper_bound = float('inf') - 1
+        else:
+            upper_bound -= 1
+
+    if not isinstance(lower_bound, int) or not isinstance(upper_bound, int):
+        raise _NonScalarBounds(""Bounds are not scalar values."")
+
+    return lower_bound, upper_bound",N/A,Execution error: '>' not supported between instances of 'str' and 'int',0,0,[],[]
+phantom-types,_get_scalar_int_bounds,"def _get_scalar_int_bounds(type_: type[Interval], exclude_min: bool=False, exclude_max: bool=False) -> tuple[int | None, int | None]:
+    low = type_.__low__ if type_.__low__ != neg_inf else None
+    high = type_.__high__ if type_.__high__ != inf else None
+    if low is not None:
+        try:
+            scalar_low = int(low)
+        except TypeError as exception:
+            raise _NonScalarBounds from exception
+        if exclude_min:
+            scalar_low += 1
+    else:
+        scalar_low = None
+    if high is not None:
+        try:
+            scalar_high = int(high)
+        except TypeError as exception:
+            raise _NonScalarBounds from exception
+        if exclude_max:
+            scalar_high -= 1
+    else:
+        scalar_high = None
+    return (scalar_low, scalar_high)","The goal of the function `_get_scalar_int_bounds` is to extract integer bounds from a given interval type while optionally excluding the minimum and maximum values. 
+It returns a tuple containing the scalar integer lower and upper bounds based on the input type, excluding the specified values if required. This function handles cases where the lower or upper bounds are infinite or non-numeric.
+
+If this function is part of a class, it likely interacts with the class by utilizing the attributes `type_.__low__` and `type_.__high__` to extract the bounds from a specific interval type. The function may also raise a `_NonScalarBounds` exception if the bounds are not scalar values.",2,"def _get_scalar_int_bounds(type_, exclude_min=False, exclude_max=False):
+    lower_bound = type_.__low__ if hasattr(type_, '__low__') else float('-inf')
+    upper_bound = type_.__high__ if hasattr(type_, '__high__') else float('inf')
+    
+    if exclude_min:
+        if lower_bound == float('-inf'):
+            raise _NonScalarBounds(""Lower bound is non-numeric"")
+        lower_bound += 1
+    
+    if exclude_max:
+        if upper_bound == float('inf'):
+            raise _NonScalarBounds(""Upper bound is non-numeric"")
+        upper_bound -= 1
+    
+    if not isinstance(lower_bound, int) or not isinstance(upper_bound, int):
+        raise _NonScalarBounds(""Bounds are not scalar values"")
+    
+    return (lower_bound, upper_bound)",N/A,Execution error: '>' not supported between instances of 'str' and 'int',0,0,[],[]
+phantom-types,_get_scalar_int_bounds,"def _get_scalar_int_bounds(type_: type[Interval], exclude_min: bool=False, exclude_max: bool=False) -> tuple[int | None, int | None]:
+    low = type_.__low__ if type_.__low__ != neg_inf else None
+    high = type_.__high__ if type_.__high__ != inf else None
+    if low is not None:
+        try:
+            scalar_low = int(low)
+        except TypeError as exception:
+            raise _NonScalarBounds from exception
+        if exclude_min:
+            scalar_low += 1
+    else:
+        scalar_low = None
+    if high is not None:
+        try:
+            scalar_high = int(high)
+        except TypeError as exception:
+            raise _NonScalarBounds from exception
+        if exclude_max:
+            scalar_high -= 1
+    else:
+        scalar_high = None
+    return (scalar_low, scalar_high)","The goal of the function `_get_scalar_int_bounds` is to extract integer bounds from a given interval type while optionally excluding the minimum and maximum values. 
+It returns a tuple containing the scalar integer lower and upper bounds based on the input type, excluding the specified values if required. This function handles cases where the lower or upper bounds are infinite or non-numeric.
+
+If this function is part of a class, it likely interacts with the class by utilizing the attributes `type_.__low__` and `type_.__high__` to extract the bounds from a specific interval type. The function may also raise a `_NonScalarBounds` exception if the bounds are not scalar values.",3,"def _get_scalar_int_bounds(type_, exclude_min=False, exclude_max=False):
+    lower_bound = type_.__low__
+    upper_bound = type_.__high__
+
+    if exclude_min:
+        if lower_bound == float('-inf'):
+            raise _NonScalarBounds(""Lower bound is not a scalar value."")
+        lower_bound += 1
+
+    if exclude_max:
+        if upper_bound == float('inf'):
+            raise _NonScalarBounds(""Upper bound is not a scalar value."")
+        upper_bound -= 1
+
+    if not isinstance(lower_bound, int) or not isinstance(upper_bound, int):
+        raise _NonScalarBounds(""Bounds are not scalar integer values."")
+
+    return lower_bound, upper_bound",N/A,Execution error: '>' not supported between instances of 'str' and 'int',0,0,[],[]
+phantom-types,_get_scalar_float_bounds,"def _get_scalar_float_bounds(type_: type[Interval]) -> tuple[float | None, float | None]:
+    low = type_.__low__ if type_.__low__ != neg_inf else None
+    high = type_.__high__ if type_.__high__ != inf else None
+    if low is not None:
+        try:
+            low = float(low)
+        except TypeError as excpetion:
+            raise _NonScalarBounds from excpetion
+    if high is not None:
+        try:
+            high = float(high)
+        except TypeError as exception:
+            raise _NonScalarBounds from exception
+    return (low, high)","The goal of the function is to obtain the lower and upper bounds of a given type of interval as float values. It checks if the lower bound is negative infinity and the upper bound is positive infinity, converting them to `None` if true. It then attempts to convert the bounds to float values and raises an exception if conversion is not possible. Finally, it returns a tuple containing the lower and upper bounds as float values or `None`.",1,"def _get_scalar_float_bounds(type_):
+    lower_bound = type_['lower']
+    upper_bound = type_['upper']
+
+    if lower_bound == float('-inf'):
+        lower_bound = None
+    if upper_bound == float('inf'):
+        upper_bound = None
+
+    try:
+        lower_bound = float(lower_bound)
+        upper_bound = float(upper_bound)
+    except ValueError:
+        raise Exception(""Bounds must be convertible to float"")
+
+    return (lower_bound, upper_bound)",N/A,Execution error: '>' not supported between instances of 'str' and 'int',0,0,[],[]
+phantom-types,_get_scalar_float_bounds,"def _get_scalar_float_bounds(type_: type[Interval]) -> tuple[float | None, float | None]:
+    low = type_.__low__ if type_.__low__ != neg_inf else None
+    high = type_.__high__ if type_.__high__ != inf else None
+    if low is not None:
+        try:
+            low = float(low)
+        except TypeError as excpetion:
+            raise _NonScalarBounds from excpetion
+    if high is not None:
+        try:
+            high = float(high)
+        except TypeError as exception:
+            raise _NonScalarBounds from exception
+    return (low, high)","The goal of the function is to obtain the lower and upper bounds of a given type of interval as float values. It checks if the lower bound is negative infinity and the upper bound is positive infinity, converting them to `None` if true. It then attempts to convert the bounds to float values and raises an exception if conversion is not possible. Finally, it returns a tuple containing the lower and upper bounds as float values or `None`.",2,"def _get_scalar_float_bounds(type_):
+    try:
+        lower_bound = float('-infinity') if type_['lower_bound'] == '-infinity' else float(type_['lower_bound'])
+        upper_bound = float('infinity') if type_['upper_bound'] == 'infinity' else float(type_['upper_bound'])
+    except ValueError:
+        raise ValueError(""Bounds must be convertible to float values"")
+    
+    return (lower_bound, upper_bound) if lower_bound != float('-infinity') or upper_bound != float('infinity') else (None, None)",N/A,Execution error: '>' not supported between instances of 'str' and 'int',0,0,[],[]
+phantom-types,_get_scalar_float_bounds,"def _get_scalar_float_bounds(type_: type[Interval]) -> tuple[float | None, float | None]:
+    low = type_.__low__ if type_.__low__ != neg_inf else None
+    high = type_.__high__ if type_.__high__ != inf else None
+    if low is not None:
+        try:
+            low = float(low)
+        except TypeError as excpetion:
+            raise _NonScalarBounds from excpetion
+    if high is not None:
+        try:
+            high = float(high)
+        except TypeError as exception:
+            raise _NonScalarBounds from exception
+    return (low, high)","The goal of the function is to obtain the lower and upper bounds of a given type of interval as float values. It checks if the lower bound is negative infinity and the upper bound is positive infinity, converting them to `None` if true. It then attempts to convert the bounds to float values and raises an exception if conversion is not possible. Finally, it returns a tuple containing the lower and upper bounds as float values or `None`.",3,"def _get_scalar_float_bounds(type_):
+    lower_bound = type_[0]
+    upper_bound = type_[1]
+    
+    if lower_bound == float('-inf'):
+        lower_bound = None
+    if upper_bound == float('inf'):
+        upper_bound = None
+    
+    try:
+        lower_bound = float(lower_bound)
+        upper_bound = float(upper_bound)
+    except ValueError:
+        raise ValueError(""Bounds could not be converted to float values"")
+    
+    return (lower_bound, upper_bound)",N/A,Execution error: '>' not supported between instances of 'str' and 'int',0,0,[],[]
+phantom-types,normalize_alpha2_country_code,"def normalize_alpha2_country_code(country_code: str) -> ParsedAlpha2:
+    """"""
+    Normalize mixed case country code.
+
+    :raises InvalidCountryCode:
+    """"""
+    normalized = country_code.upper()
+    if not is_alpha2_country_code(normalized):
+        raise InvalidCountryCode
+    return cast(ParsedAlpha2, normalized)","This function aims to normalize a mixed-case country code to uppercase, ensuring it is a valid two-letter alpha-2 country code. If the input is not a valid alpha-2 code, an exception is raised. The function then returns the normalized country code.",1,"def normalize_alpha2_country_code(country_code):
+    alpha2_country_codes = ['AF', 'AL', 'DZ', 'AS', 'AD', 'AO', 'AI', 'AQ', 'AG', 'AR', 'AM', 'AW', 'AU', 'AT', 'AZ', 'BS',
+                            'BH', 'BD', 'BB', 'BY', 'BE', 'BZ', 'BJ', 'BM', 'BT', 'BO', 'BA', 'BW', 'BV', 'BR', 'IO', 'BN',
+                            'BG', 'BF', 'BI', 'KH', 'CM', 'CA', 'CV', 'KY', 'CF', 'TD', 'CL', 'CN', 'CX', 'CC', 'CO', 'KM',
+                            'CG', 'CD', 'CK', 'CR', 'CI', 'HR', 'CU', 'CY', 'CZ', 'DK', 'DJ', 'DM', 'DO', 'EC', 'EG', 'SV',
+                            'GQ', 'ER', 'EE', 'ET', 'FK', 'FO', 'FJ', 'FI', 'FR', 'GF', 'PF', 'TF', 'GA', 'GM', 'GE', 'DE',
+                            'GH', 'GI', 'GR', 'GL', 'GD', 'GP', 'GU', 'GT', 'GN', 'GW', 'GY', 'HT', 'HM', 'VA', 'HN', 'HK',
+                            'HU', 'IS', 'IN', 'ID', 'IR', 'IQ', 'IE', 'IL', 'IT', 'JM', 'JP', 'JO', 'KZ', 'KE', 'KI', 'KP',
+                            'KR', 'KW', 'KG', 'LA', 'LV', 'LB', 'LS', 'LR', 'LY', 'LI', 'LT', 'LU', 'MO', 'MK', 'MG', 'MW',
+                            'MY', 'MV', 'ML', 'MT', 'MH', 'MQ', 'MR', 'MU', 'YT', 'MX', 'FM', 'MD', 'MC', 'MN', 'MS', 'MA',
+                            'MZ', 'MM', 'NA', 'NR', 'NP', 'NL', 'AN', 'NC', 'NZ', 'NI', 'NE', 'NG', 'NU', 'NF', 'MP', 'NO',
+                            'OM', 'PK', 'PW', 'PS', 'PA', 'PG', 'PY', 'PE', 'PH', 'PN', 'PL', 'PT', 'PR', 'QA', 'RE', 'RO',
+                            'RU', 'RW', 'SH', 'KN', 'LC', 'PM', 'VC', 'WS', 'SM', 'ST', 'SA', 'SN', 'CS', 'SC', 'SL', 'SG',
+                            'SK', 'SI', 'SB', 'SO', 'ZA', 'GS', 'ES', 'LK', 'SD', 'SR', 'SJ', 'SZ', 'SE', 'CH', 'SY', 'TW',
+                            'TJ', 'TZ', 'TH', 'TL', 'TG', 'TK', 'TO', 'TT', 'TN', 'TR', 'TM', 'TC', 'TV', 'UG', 'UA', 'AE',
+                            'GB', 'US', 'UM', 'UY', 'UZ', 'VU', 'VE', 'VN', 'VG', 'VI', 'WF', 'EH', 'YE', 'YU', 'ZM', 'ZW']
+
+    normalized_country_code = country_code.upper()
+
+    if normalized_country_code in alpha2_country_codes:
+        return normalized_country_code
+    else:
+        raise ValueError(""Invalid alpha-2 country code"")",N/A,Execution error: '>' not supported between instances of 'str' and 'int',0,0,[],[]
+phantom-types,normalize_alpha2_country_code,"def normalize_alpha2_country_code(country_code: str) -> ParsedAlpha2:
+    """"""
+    Normalize mixed case country code.
+
+    :raises InvalidCountryCode:
+    """"""
+    normalized = country_code.upper()
+    if not is_alpha2_country_code(normalized):
+        raise InvalidCountryCode
+    return cast(ParsedAlpha2, normalized)","This function aims to normalize a mixed-case country code to uppercase, ensuring it is a valid two-letter alpha-2 country code. If the input is not a valid alpha-2 code, an exception is raised. The function then returns the normalized country code.",2,"def normalize_alpha2_country_code(country_code):
+    if len(country_code) != 2 or not country_code.isalpha():
+        raise ValueError(""Invalid country code"")
+
+    normalized_country_code = country_code.upper()
+
+    return normalized_country_code",N/A,Execution error: '>' not supported between instances of 'str' and 'int',0,0,[],[]
+phantom-types,normalize_alpha2_country_code,"def normalize_alpha2_country_code(country_code: str) -> ParsedAlpha2:
+    """"""
+    Normalize mixed case country code.
+
+    :raises InvalidCountryCode:
+    """"""
+    normalized = country_code.upper()
+    if not is_alpha2_country_code(normalized):
+        raise InvalidCountryCode
+    return cast(ParsedAlpha2, normalized)","This function aims to normalize a mixed-case country code to uppercase, ensuring it is a valid two-letter alpha-2 country code. If the input is not a valid alpha-2 code, an exception is raised. The function then returns the normalized country code.",3,"def normalize_alpha2_country_code(country_code):
+    country_code = country_code.upper()
+    
+    if len(country_code) != 2 or not country_code.isalpha():
+        raise ValueError(""Invalid alpha-2 country code"")
+    
+    return country_code",N/A,Execution error: '>' not supported between instances of 'str' and 'int',0,0,[],[]
+phantom-types,create_strategy,"def create_strategy(type_: type[T]) -> _hypothesis.SearchStrategy[T] | None:
+    min_size = cls.__min__ or 0
+    if cls.__bound__ is str:
+        return text(min_size=min_size, max_size=cls.__max__)
+    inner_type, = get_args(type_)
+
+    @composite
+    def tuples(draw: DrawFn) -> tuple:
+        strategy = lists(from_type(inner_type), min_size=min_size, max_size=cls.__max__)
+        return tuple(draw(strategy))
+    return tuples()","The goal of this function is to create a strategy for generating test data based on the specified type. The function determines the minimum size of the data based on class attributes, and then generates a strategy accordingly. The generated strategy can be used for property-based testing to ensure that the test data meets the specified criteria.",1,"def create_strategy(type_):
+    if type_ == int:
+        return lambda: st.integers()
+    elif type_ == str:
+        return lambda: st.text()
+    elif type_ == float:
+        return lambda: st.floats()
+    elif type_ == list:
+        return lambda: st.lists(st.integers())
+    else:
+        return lambda: st.none()",N/A,Execution error: '>' not supported between instances of 'str' and 'int',0,0,[],[]
+phantom-types,create_strategy,"def create_strategy(type_: type[T]) -> _hypothesis.SearchStrategy[T] | None:
+    min_size = cls.__min__ or 0
+    if cls.__bound__ is str:
+        return text(min_size=min_size, max_size=cls.__max__)
+    inner_type, = get_args(type_)
+
+    @composite
+    def tuples(draw: DrawFn) -> tuple:
+        strategy = lists(from_type(inner_type), min_size=min_size, max_size=cls.__max__)
+        return tuple(draw(strategy))
+    return tuples()","The goal of this function is to create a strategy for generating test data based on the specified type. The function determines the minimum size of the data based on class attributes, and then generates a strategy accordingly. The generated strategy can be used for property-based testing to ensure that the test data meets the specified criteria.",2,"def create_strategy(type_):
+    if type_ == int:
+        return lambda: st.integers()
+    elif type_ == str:
+        return lambda: st.text()
+    elif type_ == list:
+        return lambda: st.lists(st.integers())
+    else:
+        return lambda: None",N/A,Execution error: '>' not supported between instances of 'str' and 'int',0,0,[],[]
+phantom-types,create_strategy,"def create_strategy(type_: type[T]) -> _hypothesis.SearchStrategy[T] | None:
+    min_size = cls.__min__ or 0
+    if cls.__bound__ is str:
+        return text(min_size=min_size, max_size=cls.__max__)
+    inner_type, = get_args(type_)
+
+    @composite
+    def tuples(draw: DrawFn) -> tuple:
+        strategy = lists(from_type(inner_type), min_size=min_size, max_size=cls.__max__)
+        return tuple(draw(strategy))
+    return tuples()","The goal of this function is to create a strategy for generating test data based on the specified type. The function determines the minimum size of the data based on class attributes, and then generates a strategy accordingly. The generated strategy can be used for property-based testing to ensure that the test data meets the specified criteria.",3,"def create_strategy(type_):
+    if type_ == int:
+        return lambda: st.integers()
+    elif type_ == str:
+        return lambda: st.text()
+    elif type_ == list:
+        return lambda: st.lists(st.integers())
+    else:
+        return lambda: st.none()",N/A,Execution error: '>' not supported between instances of 'str' and 'int',0,0,[],[]
+phantom-types,_interpret_implicit_bound,"@classmethod
+def _interpret_implicit_bound(cls) -> BoundType:
+
+    def discover_bounds() -> Iterable[type]:
+        for type_ in cls.__mro__:
+            if type_ is cls:
+                continue
+            if issubclass(type_, Phantom):
+                break
+            yield type_
+        else:
+            raise RuntimeError(f'{cls} is not a subclass of Phantom')
+    types = tuple(discover_bounds())
+    if len(types) == 1:
+        return types[0]
+    return types","This function aims to interpret the implicit bound of a class by identifying all the ancestors of the class up to a certain point, excluding the class itself and any subclasses of a specific type. It returns the type(s) that define the boundaries of the class. If there is only one type, it returns that type; otherwise, it returns a tuple of all identified types. This function is a class method and interacts with the class context by accessing the method resolution order (__mro__) and checking for subclasses of a specific type (Phantom) within the class hierarchy.",1,"def _interpret_implicit_bound(cls):
+    ancestors = []
+    for ancestor in cls.__mro__:
+        if ancestor == cls or issubclass(ancestor, Phantom):
+            break
+        ancestors.append(ancestor)
+    if len(ancestors) == 1:
+        return ancestors[0]
+    else:
+        return tuple(ancestors)",N/A,Execution error: '>' not supported between instances of 'str' and 'int',0,0,[],[]
+phantom-types,_interpret_implicit_bound,"@classmethod
+def _interpret_implicit_bound(cls) -> BoundType:
+
+    def discover_bounds() -> Iterable[type]:
+        for type_ in cls.__mro__:
+            if type_ is cls:
+                continue
+            if issubclass(type_, Phantom):
+                break
+            yield type_
+        else:
+            raise RuntimeError(f'{cls} is not a subclass of Phantom')
+    types = tuple(discover_bounds())
+    if len(types) == 1:
+        return types[0]
+    return types","This function aims to interpret the implicit bound of a class by identifying all the ancestors of the class up to a certain point, excluding the class itself and any subclasses of a specific type. It returns the type(s) that define the boundaries of the class. If there is only one type, it returns that type; otherwise, it returns a tuple of all identified types. This function is a class method and interacts with the class context by accessing the method resolution order (__mro__) and checking for subclasses of a specific type (Phantom) within the class hierarchy.",2,"def _interpret_implicit_bound(cls):
+    ancestors = [ancestor for ancestor in cls.__mro__ if ancestor != cls and not issubclass(ancestor, Phantom)]
+    boundary_types = tuple(set(ancestors))
+    return boundary_types",N/A,Execution error: '>' not supported between instances of 'str' and 'int',0,0,[],[]
+phantom-types,_interpret_implicit_bound,"@classmethod
+def _interpret_implicit_bound(cls) -> BoundType:
+
+    def discover_bounds() -> Iterable[type]:
+        for type_ in cls.__mro__:
+            if type_ is cls:
+                continue
+            if issubclass(type_, Phantom):
+                break
+            yield type_
+        else:
+            raise RuntimeError(f'{cls} is not a subclass of Phantom')
+    types = tuple(discover_bounds())
+    if len(types) == 1:
+        return types[0]
+    return types","This function aims to interpret the implicit bound of a class by identifying all the ancestors of the class up to a certain point, excluding the class itself and any subclasses of a specific type. It returns the type(s) that define the boundaries of the class. If there is only one type, it returns that type; otherwise, it returns a tuple of all identified types. This function is a class method and interacts with the class context by accessing the method resolution order (__mro__) and checking for subclasses of a specific type (Phantom) within the class hierarchy.",3,"def _interpret_implicit_bound(cls):
+    if not hasattr(cls, '__mro__'):
+        return ()
+
+    ancestors = cls.__mro__[:-1]
+    boundaries = []
+    for ancestor in ancestors:
+        if any(issubclass(subclass, Phantom) for subclass in ancestor.__subclasses__()):
+            break
+        boundaries.append(ancestor)
+
+    if len(boundaries) == 1:
+        return boundaries[0]
+    else:
+        return tuple(boundaries)",N/A,Execution error: '>' not supported between instances of 'str' and 'int',0,0,[],[]
+phantom-types,_resolve_bound,"@classmethod
+def _resolve_bound(cls, class_arg: Any) -> None:
+    inherited = getattr(cls, '__bound__', None)
+    implicit = cls._interpret_implicit_bound()
+    if class_arg is not None:
+        bound = class_arg
+    elif implicit:
+        bound = implicit
+    elif inherited is not None:
+        bound = inherited
+    elif not getattr(cls, '__abstract__', False):
+        raise UnresolvedClassAttribute(f'Concrete phantom type {cls.__qualname__} must define class attribute __bound__.')
+    else:
+        return
+    if inherited is not None and (not is_subtype(bound, inherited)):
+        raise BoundError(f'The bound of {cls.__qualname__} is not compatible with its inherited bounds.')
+    if not is_not_known_mutable_type(bound):
+        raise MutableType(f'The bound of {cls.__qualname__} is mutable.')
+    cls.__bound__ = bound","The goal of this function is to resolve the bound attribute for a class, which is used in the context of defining a phantom type. The function first checks for an explicitly passed class argument, then looks for an implicit bound or an inherited bound. If none of these are found and the class is not abstract, an error is raised. It also ensures that the bound is compatible with any inherited bounds, is not a mutable type, and then sets the bound attribute for the class. This function is typically used within a class context to handle the resolution of the bound attribute for that class.",1,"def _resolve_bound(cls, class_arg):
+    if hasattr(cls, 'bound'):
+        return cls.bound
+    elif hasattr(cls, '_bound'):
+        return cls._bound
+    elif hasattr(cls, '__bound'):
+        return cls.__bound
+    else:
+        raise AttributeError(""Bound attribute not found for class"")",N/A,Execution error: '>' not supported between instances of 'str' and 'int',0,0,[],[]
+phantom-types,_resolve_bound,"@classmethod
+def _resolve_bound(cls, class_arg: Any) -> None:
+    inherited = getattr(cls, '__bound__', None)
+    implicit = cls._interpret_implicit_bound()
+    if class_arg is not None:
+        bound = class_arg
+    elif implicit:
+        bound = implicit
+    elif inherited is not None:
+        bound = inherited
+    elif not getattr(cls, '__abstract__', False):
+        raise UnresolvedClassAttribute(f'Concrete phantom type {cls.__qualname__} must define class attribute __bound__.')
+    else:
+        return
+    if inherited is not None and (not is_subtype(bound, inherited)):
+        raise BoundError(f'The bound of {cls.__qualname__} is not compatible with its inherited bounds.')
+    if not is_not_known_mutable_type(bound):
+        raise MutableType(f'The bound of {cls.__qualname__} is mutable.')
+    cls.__bound__ = bound","The goal of this function is to resolve the bound attribute for a class, which is used in the context of defining a phantom type. The function first checks for an explicitly passed class argument, then looks for an implicit bound or an inherited bound. If none of these are found and the class is not abstract, an error is raised. It also ensures that the bound is compatible with any inherited bounds, is not a mutable type, and then sets the bound attribute for the class. This function is typically used within a class context to handle the resolution of the bound attribute for that class.",2,"def _resolve_bound(cls, class_arg):
+    if class_arg:
+        bound = class_arg
+    elif hasattr(cls, '__bound__'):
+        bound = cls.__bound__
+    elif hasattr(cls.__base__, '__bound__'):
+        bound = cls.__base__.__bound__
+    else:
+        raise ValueError(""No bound attribute found for the class"")
+
+    if hasattr(cls.__base__, '__bound__') and bound != cls.__base__.__bound__:
+        raise ValueError(""Incompatible bound attribute with inherited class"")
+
+    if isinstance(bound, (list, dict, set)):
+        raise ValueError(""Bound attribute cannot be a mutable type"")
+
+    cls.__bound__ = bound",N/A,Execution error: '>' not supported between instances of 'str' and 'int',0,0,[],[]
+phantom-types,_resolve_bound,"@classmethod
+def _resolve_bound(cls, class_arg: Any) -> None:
+    inherited = getattr(cls, '__bound__', None)
+    implicit = cls._interpret_implicit_bound()
+    if class_arg is not None:
+        bound = class_arg
+    elif implicit:
+        bound = implicit
+    elif inherited is not None:
+        bound = inherited
+    elif not getattr(cls, '__abstract__', False):
+        raise UnresolvedClassAttribute(f'Concrete phantom type {cls.__qualname__} must define class attribute __bound__.')
+    else:
+        return
+    if inherited is not None and (not is_subtype(bound, inherited)):
+        raise BoundError(f'The bound of {cls.__qualname__} is not compatible with its inherited bounds.')
+    if not is_not_known_mutable_type(bound):
+        raise MutableType(f'The bound of {cls.__qualname__} is mutable.')
+    cls.__bound__ = bound","The goal of this function is to resolve the bound attribute for a class, which is used in the context of defining a phantom type. The function first checks for an explicitly passed class argument, then looks for an implicit bound or an inherited bound. If none of these are found and the class is not abstract, an error is raised. It also ensures that the bound is compatible with any inherited bounds, is not a mutable type, and then sets the bound attribute for the class. This function is typically used within a class context to handle the resolution of the bound attribute for that class.",3,"def _resolve_bound(cls, class_arg):
+    explicit_bound = getattr(cls, 'bound', None)
+    implicit_bound = getattr(cls, '_bound', None)
+    inherited_bound = getattr(cls.__base__, 'bound', None) if cls.__base__ is not object else None
+    
+    if class_arg is not None:
+        bound = class_arg
+    elif explicit_bound is not None:
+        bound = explicit_bound
+    elif implicit_bound is not None:
+        bound = implicit_bound
+    elif inherited_bound is not None:
+        bound = inherited_bound
+    elif not getattr(cls, '__abstract__', False):
+        raise ValueError(""No bound attribute found and class is not abstract"")
+    
+    if inherited_bound is not None:
+        if not issubclass(bound, inherited_bound):
+            raise ValueError(""Bound attribute is not compatible with inherited bound"")
+    
+    if isinstance(bound, (list, dict, set)):
+        raise ValueError(""Bound attribute cannot be a mutable type"")
+    
+    cls.bound = bound",N/A,Execution error: '>' not supported between instances of 'str' and 'int',0,0,[],[]
+phantom-types,all_of,"def all_of(predicates: Iterable[Predicate[T_contra]]) -> Predicate[T_contra]:
+    """"""Create a new predicate that succeeds when all of the given predicates succeed.""""""
+    predicates = tuple(predicates)
+
+    @bind_name(all_of, *predicates)
+    def check(value: T_contra) -> bool:
+        return all((p(value) for p in predicates))
+    return check",The goal of the `all_of` function is to create a new predicate that will succeed only if all of the given predicates also succeed when applied to a value. This function takes a collection of predicates as input and returns a new predicate that combines their individual results. This can be useful for checking multiple conditions at once before allowing a certain operation to proceed.,1,"def all_of(predicates):
+    def new_predicate(value):
+        return all(pred(value) for pred in predicates)
+    return new_predicate",N/A,Execution error: '>' not supported between instances of 'str' and 'int',0,0,[],[]
+phantom-types,all_of,"def all_of(predicates: Iterable[Predicate[T_contra]]) -> Predicate[T_contra]:
+    """"""Create a new predicate that succeeds when all of the given predicates succeed.""""""
+    predicates = tuple(predicates)
+
+    @bind_name(all_of, *predicates)
+    def check(value: T_contra) -> bool:
+        return all((p(value) for p in predicates))
+    return check",The goal of the `all_of` function is to create a new predicate that will succeed only if all of the given predicates also succeed when applied to a value. This function takes a collection of predicates as input and returns a new predicate that combines their individual results. This can be useful for checking multiple conditions at once before allowing a certain operation to proceed.,2,"def all_of(predicates):
+    def combined_predicates(value):
+        return all(predicate(value) for predicate in predicates)
+    return combined_predicates",N/A,Execution error: '>' not supported between instances of 'str' and 'int',0,0,[],[]
+phantom-types,all_of,"def all_of(predicates: Iterable[Predicate[T_contra]]) -> Predicate[T_contra]:
+    """"""Create a new predicate that succeeds when all of the given predicates succeed.""""""
+    predicates = tuple(predicates)
+
+    @bind_name(all_of, *predicates)
+    def check(value: T_contra) -> bool:
+        return all((p(value) for p in predicates))
+    return check",The goal of the `all_of` function is to create a new predicate that will succeed only if all of the given predicates also succeed when applied to a value. This function takes a collection of predicates as input and returns a new predicate that combines their individual results. This can be useful for checking multiple conditions at once before allowing a certain operation to proceed.,3,"def all_of(predicates):
+    def new_predicate(value):
+        return all(pred(value) for pred in predicates)
+    return new_predicate",N/A,Execution error: '>' not supported between instances of 'str' and 'int',0,0,[],[]
+phantom-types,any_of,"def any_of(predicates: Iterable[Predicate[T_contra]]) -> Predicate[T_contra]:
+    """"""
+    Create a new predicate that succeeds when at least one of the given predicates
+    succeed.
+    """"""
+    predicates = tuple(predicates)
+
+    @bind_name(any_of, *predicates)
+    def check(value: T_contra) -> bool:
+        return any((p(value) for p in predicates))
+    return check",The goal of this function is to create a new predicate that will return true if at least one of the given predicates also returns true when applied to a value. This allows for a more flexible way to combine multiple predicates and check if any of them are satisfied.,1,"def any_of(predicates):
+    def new_predicate(value):
+        return any(pred(value) for pred in predicates)
+    return new_predicate",N/A,Execution error: '>' not supported between instances of 'str' and 'int',0,0,[],[]
+phantom-types,any_of,"def any_of(predicates: Iterable[Predicate[T_contra]]) -> Predicate[T_contra]:
+    """"""
+    Create a new predicate that succeeds when at least one of the given predicates
+    succeed.
+    """"""
+    predicates = tuple(predicates)
+
+    @bind_name(any_of, *predicates)
+    def check(value: T_contra) -> bool:
+        return any((p(value) for p in predicates))
+    return check",The goal of this function is to create a new predicate that will return true if at least one of the given predicates also returns true when applied to a value. This allows for a more flexible way to combine multiple predicates and check if any of them are satisfied.,2,"def any_of(predicates):
+    def new_predicate(value):
+        return any(pred(value) for pred in predicates)
+    return new_predicate",N/A,Execution error: '>' not supported between instances of 'str' and 'int',0,0,[],[]
+phantom-types,any_of,"def any_of(predicates: Iterable[Predicate[T_contra]]) -> Predicate[T_contra]:
+    """"""
+    Create a new predicate that succeeds when at least one of the given predicates
+    succeed.
+    """"""
+    predicates = tuple(predicates)
+
+    @bind_name(any_of, *predicates)
+    def check(value: T_contra) -> bool:
+        return any((p(value) for p in predicates))
+    return check",The goal of this function is to create a new predicate that will return true if at least one of the given predicates also returns true when applied to a value. This allows for a more flexible way to combine multiple predicates and check if any of them are satisfied.,3,"def any_of(predicates):
+    def new_predicate(value):
+        return any(predicate(value) for predicate in predicates)
+    return new_predicate",N/A,Execution error: '>' not supported between instances of 'str' and 'int',0,0,[],[]
+phantom-types,one_of,"def one_of(predicates: Iterable[Predicate[T_contra]]) -> Predicate[T_contra]:
+    """"""
+    Create a new predicate that succeeds when exactly one of the given predicates
+    succeed.
+    """"""
+    predicates = tuple(predicates)
+
+    @bind_name(one_of, *predicates)
+    def check(value: T_contra) -> bool:
+        return sum((p(value) for p in predicates)) == 1
+    return check",The goal of the `one_of` function is to create a new predicate that will only succeed if exactly one of the given predicates succeeds. This function takes a collection of predicates as input and returns a new predicate that checks if only one of the input predicates returns True for a given value. This can be useful in scenarios where you want to ensure that only one condition is met out of multiple possible conditions.,1,"def one_of(predicates):
+    def new_predicate(value):
+        true_count = sum(1 for predicate in predicates if predicate(value))
+        return true_count == 1
+    
+    return new_predicate",N/A,Execution error: '>' not supported between instances of 'str' and 'int',0,0,[],[]
+phantom-types,one_of,"def one_of(predicates: Iterable[Predicate[T_contra]]) -> Predicate[T_contra]:
+    """"""
+    Create a new predicate that succeeds when exactly one of the given predicates
+    succeed.
+    """"""
+    predicates = tuple(predicates)
+
+    @bind_name(one_of, *predicates)
+    def check(value: T_contra) -> bool:
+        return sum((p(value) for p in predicates)) == 1
+    return check",The goal of the `one_of` function is to create a new predicate that will only succeed if exactly one of the given predicates succeeds. This function takes a collection of predicates as input and returns a new predicate that checks if only one of the input predicates returns True for a given value. This can be useful in scenarios where you want to ensure that only one condition is met out of multiple possible conditions.,2,"def one_of(predicates):
+    def new_predicate(value):
+        count = 0
+        for predicate in predicates:
+            if predicate(value):
+                count += 1
+            if count > 1:
+                return False
+        return count == 1
+
+    return new_predicate",N/A,Execution error: '>' not supported between instances of 'str' and 'int',0,0,[],[]
+phantom-types,one_of,"def one_of(predicates: Iterable[Predicate[T_contra]]) -> Predicate[T_contra]:
+    """"""
+    Create a new predicate that succeeds when exactly one of the given predicates
+    succeed.
+    """"""
+    predicates = tuple(predicates)
+
+    @bind_name(one_of, *predicates)
+    def check(value: T_contra) -> bool:
+        return sum((p(value) for p in predicates)) == 1
+    return check",The goal of the `one_of` function is to create a new predicate that will only succeed if exactly one of the given predicates succeeds. This function takes a collection of predicates as input and returns a new predicate that checks if only one of the input predicates returns True for a given value. This can be useful in scenarios where you want to ensure that only one condition is met out of multiple possible conditions.,3,"def one_of(predicates):
+    def new_predicate(value):
+        true_count = 0
+        for predicate in predicates:
+            if predicate(value):
+                true_count += 1
+            if true_count > 1:
+                return False
+        return true_count == 1
+    return new_predicate",N/A,Execution error: '>' not supported between instances of 'str' and 'int',0,0,[],[]
+phantom-types,_explode_partial,"def _explode_partial(obj: partial) -> str:
+    positional_args = ', '.join(map(repr, obj.args))
+    keyword_args = ', '.join((f'{name}={value!r}' for name, value in obj.keywords.items()))
+    args = ', '.join((positional_args, keyword_args))
+    return f'{obj.func.__qualname__}({args})'","The goal of the function `_explode_partial` is to take a `functools.partial` object and return a string representation of it, including its function name, positional arguments, and keyword arguments. This function is designed to provide a readable summary of the partial object without delving into the specific implementation details.",1,"def _explode_partial(obj):
+    func_name = obj.func.__name__
+    args = obj.args
+    kwargs = obj.keywords
+    return f""{func_name}({', '.join(map(repr, args))}, {', '.join(f'{key}={value}' for key, value in kwargs.items())})""",N/A,Execution error: '>' not supported between instances of 'str' and 'int',0,0,[],[]
+phantom-types,_explode_partial,"def _explode_partial(obj: partial) -> str:
+    positional_args = ', '.join(map(repr, obj.args))
+    keyword_args = ', '.join((f'{name}={value!r}' for name, value in obj.keywords.items()))
+    args = ', '.join((positional_args, keyword_args))
+    return f'{obj.func.__qualname__}({args})'","The goal of the function `_explode_partial` is to take a `functools.partial` object and return a string representation of it, including its function name, positional arguments, and keyword arguments. This function is designed to provide a readable summary of the partial object without delving into the specific implementation details.",2,"def _explode_partial(obj):
+    func_name = obj.func.__name__
+    args = obj.args
+    kwargs = obj.keywords
+    
+    result = f""Function: {func_name}, Args: {args}, Kwargs: {kwargs}""
+    return result",N/A,Execution error: '>' not supported between instances of 'str' and 'int',0,0,[],[]
+phantom-types,_explode_partial,"def _explode_partial(obj: partial) -> str:
+    positional_args = ', '.join(map(repr, obj.args))
+    keyword_args = ', '.join((f'{name}={value!r}' for name, value in obj.keywords.items()))
+    args = ', '.join((positional_args, keyword_args))
+    return f'{obj.func.__qualname__}({args})'","The goal of the function `_explode_partial` is to take a `functools.partial` object and return a string representation of it, including its function name, positional arguments, and keyword arguments. This function is designed to provide a readable summary of the partial object without delving into the specific implementation details.",3,"def _explode_partial(obj):
+    func_name = obj.func.__name__
+    args = obj.args
+    kwargs = obj.keywords
+    
+    arg_list = ', '.join([repr(arg) for arg in args])
+    kwarg_list = ', '.join([f'{key}={repr(value)}' for key, value in kwargs.items()])
+    
+    return f""{func_name}({arg_list}, {kwarg_list})""",N/A,Execution error: '>' not supported between instances of 'str' and 'int',0,0,[],[]

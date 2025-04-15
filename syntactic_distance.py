@@ -6,26 +6,47 @@ from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from difflib import SequenceMatcher
+import matplotlib
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import seaborn as sns
 import os
-from dotenv import load_dotenv
+from nltk.tokenize import word_tokenize
 
-# Load environment variables
-load_dotenv()
 
-api_key = os.getenv("OPENAI_API_KEY")
-DATASET_FILE = "humaneval_java_plus_no_outliers_correct.csv"
+nltk.download("punkt")
 
-# Tokenizer function (to be used for different tokenization strategies)
+repos = [
+    "https://github.com/PantherPy/pantherdb",
+    "https://github.com/akoumjian/datefinder",
+    "https://github.com/alexmojaki/executing",
+    "https://github.com/andialbrecht/sqlparse",
+    "https://github.com/antonagestam/phantom-types",
+    "https://github.com/cpburnz/python-pathspec"
+]
+
+# Tokenizer function
+# def tokenize_code(code, tokens='nltk'):
+#     if tokens == "nltk":
+#         return word_tokenize(code)
+#     elif tokens == "words":
+#         return code.split()
+#     else:
+#         raise Exception("Not a valid tokens type")
+
+import re
+
 def tokenize_code(code, tokens='nltk'):
     if tokens == "nltk":
-        return nltk.word_tokenize(code)
+        return word_tokenize(code)
     elif tokens == "words":
         return code.split()
+    elif tokens == "simple":
+        return re.findall(r"\w+|[^\w\s]", code)
     else:
         raise Exception("Not a valid tokens type")
 
+# Distance metrics
 def compute_bleu_score(reference_code, candidate_code, tokens):
     smoothing_function = SmoothingFunction().method4
     reference_code_tokens = tokenize_code(reference_code, tokens)
@@ -45,7 +66,7 @@ def compute_jaccard_sim(reference_code, candidate_code, tokens):
     candidate_code_tokens_set = set(candidate_code_tokens)
     intersection = len(reference_code_tokens_set.intersection(candidate_code_tokens_set))
     union = len(reference_code_tokens_set) + len(candidate_code_tokens_set) - len(reference_code_tokens_set)
-    return intersection / union
+    return intersection / union if union > 0 else 0
 
 def sequence_based_distance(reference_code, candidate_code, tokens):
     reference_code_tokens = tokenize_code(reference_code, tokens)
@@ -63,22 +84,20 @@ def compute_tf_idf_distance(reference_code, candidate_code, tokens):
     cosine_sim_matrix = 1 - cosine_similarity(sparse_matrix, sparse_matrix)
     return cosine_sim_matrix[0][1]
 
-# Function to compute distances and return results
-def report_distance(intent_file_path, reference_file_path, metric='bleu', tasks=[]):
-    mutated = pd.read_csv(intent_file_path)
-    original = pd.read_csv(reference_file_path)
-    
+# Distance computation function
+def report_distance(data_file_path, metric='bleu'):
+    df = pd.read_csv(data_file_path)
     overall_distances = []
-    
-    for task_id in tasks:
-        task_original = original[original['task_id'] == task_id]
-        task_mutated = mutated[mutated['task_id'] == task_id]
 
-        baseline_code = task_original.iloc[0]['code']  # Assuming the canonical solution is the first one in the list
-        task_distances = []
+    grouped = df.groupby(['Repo Name', 'Function Name'])
 
-        for _, mutant in task_mutated.iterrows():
-            mutant_code = mutant['code']
+    for (repo_name, function_name), group in grouped:
+        baseline_code = group.iloc[0]['original_code']  # Assume original_code is the same across group
+        for _, row in group.iterrows():
+            mutant_code = row['Mutant Code']
+            if pd.isna(mutant_code):
+                continue
+
             if metric == 'bleu':
                 distance = 1 - compute_bleu_score(baseline_code, mutant_code, tokens='nltk')
             elif metric == 'cosine':
@@ -92,44 +111,69 @@ def report_distance(intent_file_path, reference_file_path, metric='bleu', tasks=
             else:
                 raise Exception("Invalid metric. Choose one from: bleu, cosine, jaccard, tokens, tf.")
 
-            task_distances.append({"task_id": task_id, "mutant_id": mutant['mutant_id'], "distance": distance})
+            overall_distances.append({
+                "repo": repo_name,
+                "function": function_name,
+                "mutant_index": row["Mutant Index"],
+                "distance": distance
+            })
 
-        overall_distances.extend(task_distances)
-    
     return overall_distances
 
-# Function to save distances to JSONL and create boxplots
-def save_and_plot_distances(distances, metric):
+# Save results and plot boxplots
+def save_and_plot_distances(distances, label):
     df = pd.DataFrame(distances)
+    os.makedirs("distance_results", exist_ok=True)
     
-    # Save results to JSONL
-    df.to_json(f"distance_results/{metric}.jsonl", orient='records', lines=True)
+    # Save JSONL
+    jsonl_path = f"distance_results/{label}.jsonl"
+    df.to_json(jsonl_path, orient='records', lines=True)
 
-    # Plot distance distribution
+    # Plot
     plt.figure(figsize=(16, 10))
-    sns.boxplot(data=df, x="task_id", y="distance")
-    plt.title(f"Syntactic Distance Distribution - {metric}")
-    plt.ylabel(f"Distance (1 - {metric.upper()})")
+    sns.boxplot(data=df, x="function", y="distance")
+    plt.title(f"Syntactic Distance Distribution - {label}")
+    plt.ylabel(f"Distance")
     plt.xticks(rotation=90)
     plt.tight_layout()
-    plt.savefig(f"distance_results/{metric}.png", dpi=300)
+    plt.savefig(f"distance_results/{label}.png", dpi=300)
+    plt.close()
 
-# Main function to compare distances for different metrics
+# Helper to extract repo name from URL
+def extract_repo_basename(repo_url):
+    return repo_url.rstrip("/").split("/")[-1]
+
+# Main batch-processing logic
 def main():
-    intent_file_path = "/path/to/your/mutants.csv"  # Path to the mutants CSV
-    original_file_path = "/path/to/your/original.csv"  # Path to the original solutions CSV
-    tasks = ['Java/119', 'Java/154', 'Java/120']  # List of tasks to process
-    metrics = ['tokens', 'bleu', 'cosine', 'jaccard', 'tf']  # Metrics to use
+    metrics = ['tokens', 'bleu', 'cosine', 'jaccard', 'tf']
+    all_results = []
 
-    results = []
-    for metric in metrics:
-        print(f"Computing distances using {metric} metric...")
-        distances = report_distance(intent_file_path, original_file_path, metric=metric, tasks=tasks)
-        save_and_plot_distances(distances, metric)
-        mean_distance = np.mean([d['distance'] for d in distances])
-        results.append([metric, mean_distance])
-    
-    print("Distance results (metric, mean distance):", results)
+    for repo_url in repos:
+        repo_name = extract_repo_basename(repo_url)
+        file_path = f"repo_stats_with_code/{repo_name}_mutation_results.csv"
+        
+        if not os.path.exists(file_path):
+            print(f"File not found: {file_path}. Skipping...")
+            continue
+
+        print(f"\nProcessing repository: {repo_name}")
+        for metric in metrics:
+            print(f"  Computing distances using {metric} metric...")
+            distances = report_distance(file_path, metric=metric)
+            if distances:
+                label = f"{repo_name}_{metric}"
+                save_and_plot_distances(distances, label)
+                mean_distance = np.mean([d['distance'] for d in distances])
+                all_results.append({
+                    "repo": repo_name,
+                    "metric": metric,
+                    "mean_distance": mean_distance
+                })
+
+    # Save overall summary
+    summary_df = pd.DataFrame(all_results)
+    summary_df.to_csv("syntactic_distance_results/distance_summary.csv", index=False)
+    print("\n✅ Summary saved to syntactic_distance_results/distance_summary.csv")
 
 if __name__ == "__main__":
     main()
