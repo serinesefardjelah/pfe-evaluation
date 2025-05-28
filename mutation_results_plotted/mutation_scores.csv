@@ -1,0 +1,27 @@
+repo,num_functions,alive_mutants,execution_errors,syntax_errors,passed count,failed count,total_mutants,valid_mutants,killed_mutants,mutation_score
+asciitree,1,0,0,0,,,3,3,3,100.0
+texttable,25,0,0,2,,,75,73,73,100.0
+objgraph,2,0,0,0,,,6,6,6,100.0
+pantherdb,12,3,0,0,,,36,36,33,91.66666666666666
+sqlparse,54,16,0,3,,,162,159,143,89.937106918239
+overrides,16,6,0,0,,,48,48,42,87.5
+pydoclint,59,36,0,7,,,177,170,134,78.82352941176471
+dataclasses-json,21,16,0,1,,,63,62,46,74.19354838709677
+tenacity,14,15,0,1,,,42,41,26,63.41463414634146
+python-pathspec,21,21,0,7,,,63,56,35,62.5
+python-pathspec,21,24,0,1,,,63,62,38,61.29032258064516
+soupsieve,47,60,0,3,,,141,138,78,56.52173913043478
+xmltodict,18,31,0,3,,,54,51,20,39.21568627450981
+datefinder,65,168,0,15,,,195,180,12,6.666666666666667
+toolz,52,148,0,2,,,156,154,6,3.896103896103896
+charset_normalizer,23,66,0,3,,,69,66,0,0.0
+async-lru,0,0,0,0,,,0,0,0,0.0
+executing,19,55,0,2,,,57,55,0,0.0
+dateutil,77,223,0,8,,,231,223,0,0.0
+phantom-types,11,0,33,0,,,33,0,0,0.0
+protobuf,0,0,0,0,,,0,0,0,0.0
+dateutil,77,224,0,7,,,231,224,0,0.0
+idna,7,20,0,1,,,21,20,0,0.0
+tinydb,0,0,0,0,,,0,0,0,0.0
+python-rsa,0,0,0,0,,,0,0,0,0.0
+beautifulsoup,0,0,0,0,,,0,0,0,0.0
